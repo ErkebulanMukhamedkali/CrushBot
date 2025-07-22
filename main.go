@@ -53,10 +53,12 @@ func main() {
 			continue
 		}
 
-		// Default behavior
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-		msg.ReplyToMessageID = update.Message.MessageID
-		bot.Send(msg)
+		if update.Message.Chat.ID != config.Int64("chat.id") {
+			// Default behavior
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+			msg.ReplyToMessageID = update.Message.MessageID
+			bot.Send(msg)
+		}
 	}
 }
 
