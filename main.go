@@ -43,28 +43,22 @@ func main() {
 			continue
 		}
 
-		log.Println("Here", update.Message.Chat.Title, update.Message.Chat.ID, update.Message.Text)
-
-		if strings.HasPrefix(update.Message.Chat.Title, config.String("chat.title")) && update.Message.Chat.ID == config.Int64("chat.id") {
-			log.Println("Here1")
+		if update.Message.Chat.ID == config.Int64("chat.id") {
 			if !forgotten(strings.ToLower(update.Message.Text)) {
 				continue
 			}
 
-			log.Println("Here2")
 			msg := tgbotapi.NewSticker(update.Message.Chat.ID, tgbotapi.FileID(config.String("alt.file.id")))
 			msg.ReplyToMessageID = update.Message.MessageID
 			bot.Send(msg)
 			continue
 		}
 
-		log.Println("Here3")
-		if update.Message.Chat.ID != config.Int64("chat.id") {
-			// Default behavior
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-			msg.ReplyToMessageID = update.Message.MessageID
-			bot.Send(msg)
-		}
+		// Default behavior
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+		msg.ReplyToMessageID = update.Message.MessageID
+		bot.Send(msg)
+
 	}
 }
 
