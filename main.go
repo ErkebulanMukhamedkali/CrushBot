@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -29,6 +30,9 @@ func main() {
 	u.Timeout = 60
 
 	updates := bot.GetUpdatesChan(u)
+
+	// Just to have open ports for render
+	go http.ListenAndServe("0.0.0.0:10000", nil)
 
 	for update := range updates {
 		if update.Message == nil {
