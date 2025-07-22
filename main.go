@@ -50,6 +50,7 @@ func main() {
 			msg := tgbotapi.NewSticker(update.Message.Chat.ID, tgbotapi.FileID(config.String("alt.file.id")))
 			msg.ReplyToMessageID = update.Message.MessageID
 			bot.Send(msg)
+			continue
 		}
 
 		// Default behavior
