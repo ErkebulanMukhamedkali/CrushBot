@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -60,7 +61,7 @@ func main() {
 
 func setupWebhook(bot *tgbotapi.BotAPI) tgbotapi.UpdatesChannel {
 	webhookLink := os.Getenv(config.String("webhook.url.env.key"))
-	webhook, err := tgbotapi.NewWebhook(webhookLink)
+	webhook, err := tgbotapi.NewWebhook(fmt.Sprintf("%s/%s", webhookLink, bot.Token))
 	if err != nil {
 		log.Fatalln(err)
 	}
