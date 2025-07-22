@@ -25,6 +25,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	bot.Debug = true
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
