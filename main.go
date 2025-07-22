@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -26,10 +27,11 @@ func main() {
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
+	// u := tgbotapi.NewUpdate(0)
+	// u.Timeout = 60
 
-	updates := bot.GetUpdatesChan(u)
+	// updates := bot.GetUpdatesChan(u)
+	updates := setupWebhook(bot)
 
 	// Just to have open ports for render
 	go http.ListenAndServe("0.0.0.0:10000", nil)
@@ -54,6 +56,30 @@ func main() {
 		msg.ReplyToMessageID = update.Message.MessageID
 		bot.Send(msg)
 	}
+}
+
+func setupWebhook(bot *tgbotapi.BotAPI) tgbotapi.UpdatesChannel {
+	webhookLink := os.Getenv(config.String("webhook.url.env.key"))
+	webhook, err := tgbotapi.NewWebhook(webhookLink)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	_, err = bot.Request(webhook)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	info, err := bot.GetWebhookInfo()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if info.LastErrorDate != 0 {
+		log.Printf("Telegram callback failed: %s", info.LastErrorMessage)
+	}
+
+	return bot.ListenForWebhook("/" + bot.Token)
 }
 
 func forgotten(message string) bool {
