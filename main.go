@@ -88,7 +88,7 @@ func configure() {
 	}
 
 	if err := config.Load(file.Provider(".env"), dotenv.ParserEnv(envPrefix, ".", keyTransformer)); err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	if err := config.Load(env.Provider(".", envOpt), nil); err != nil {
