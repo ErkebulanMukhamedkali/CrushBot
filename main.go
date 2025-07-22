@@ -36,7 +36,7 @@ func main() {
 		}
 
 		if strings.HasPrefix(update.Message.Chat.Title, config.String("chat.title")) && update.Message.Chat.ID == config.Int64("chat.id") {
-			if !forgotten(update.Message.Text) {
+			if !forgotten(strings.ToLower(update.Message.Text)) {
 				continue
 			}
 
